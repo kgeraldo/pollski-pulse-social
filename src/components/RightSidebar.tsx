@@ -42,28 +42,28 @@ const RightSidebar = () => {
   ];
 
   return (
-    <div className="w-80 bg-slate-900 h-screen overflow-y-auto border-l border-slate-700">
-      <div className="p-4 space-y-6">
+    <div className="w-80 bg-slate-950 h-screen overflow-y-auto border-l border-slate-800/50">
+      <div className="p-6 space-y-8">
         {/* Top Ratings */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold">Top Ratings</h3>
-            <button className="text-blue-400 text-sm hover:text-blue-300">View all</button>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-white font-semibold text-lg">Top Ratings</h3>
+            <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors">View all</button>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {topRatings.map((item, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-slate-800 rounded-lg hover:bg-slate-750 transition-colors cursor-pointer">
+              <div key={index} className="flex items-center gap-4 p-4 bg-slate-900/50 rounded-xl hover:bg-slate-800/50 transition-all duration-200 cursor-pointer border border-slate-800/30 hover:border-slate-700/50">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-12 h-12 rounded-lg object-cover"
+                  className="w-14 h-14 rounded-xl object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="text-white text-sm font-medium">{item.title}</h4>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star size={12} className="text-yellow-400 fill-current" />
-                    <span className="text-yellow-400 text-xs">{item.rating}</span>
-                    <span className="text-slate-500 text-xs">• {item.category}</span>
+                  <h4 className="text-white font-medium mb-1">{item.title}</h4>
+                  <div className="flex items-center gap-2">
+                    <Star size={14} className="text-yellow-400 fill-current" />
+                    <span className="text-yellow-400 font-semibold text-sm">{item.rating}</span>
+                    <span className="text-slate-500 text-sm">• {item.category}</span>
                   </div>
                 </div>
               </div>
@@ -73,21 +73,21 @@ const RightSidebar = () => {
 
         {/* Following */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold">Following</h3>
-            <button className="text-blue-400 text-sm hover:text-blue-300">View all</button>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-white font-semibold text-lg">Following</h3>
+            <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors">View all</button>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {following.map((user, index) => (
-              <div key={index} className="flex items-center gap-3">
+              <div key={index} className="flex items-center gap-4 p-4 bg-slate-900/50 rounded-xl hover:bg-slate-800/50 transition-all duration-200 cursor-pointer border border-slate-800/30">
                 <img
                   src={user.image}
                   alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
-                  <h4 className="text-white text-sm font-medium">{user.name}</h4>
-                  <p className="text-slate-400 text-xs">{user.category}</p>
+                  <h4 className="text-white font-medium">{user.name}</h4>
+                  <p className="text-slate-400 text-sm">{user.category}</p>
                 </div>
               </div>
             ))}
@@ -96,21 +96,21 @@ const RightSidebar = () => {
 
         {/* Sponsored Ads */}
         <div>
-          <div className="text-slate-400 text-xs mb-3">Sponsored</div>
+          <div className="text-slate-400 text-xs mb-4 uppercase tracking-wider">Sponsored</div>
           {sponsoredAds.map((ad, index) => (
-            <div key={index} className="bg-slate-800 rounded-lg overflow-hidden">
+            <div key={index} className="bg-slate-900/50 rounded-xl overflow-hidden border border-slate-800/30 hover:border-slate-700/50 transition-all duration-200">
               <img
                 src={ad.image}
                 alt={ad.title}
-                className="w-full h-32 object-cover"
+                className="w-full h-40 object-cover"
               />
-              <div className="p-4">
-                <h4 className="text-white font-medium text-sm mb-2">{ad.title}</h4>
-                <p className="text-slate-400 text-xs mb-4 leading-relaxed">{ad.description}</p>
-                <Button size="sm" className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+              <div className="p-5">
+                <h4 className="text-white font-semibold mb-3 leading-tight">{ad.title}</h4>
+                <p className="text-slate-400 text-sm mb-5 leading-relaxed">{ad.description}</p>
+                <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 rounded-xl font-medium">
                   {ad.cta}
                 </Button>
-                <div className="text-slate-500 text-xs mt-2 flex items-center gap-1">
+                <div className="text-slate-500 text-xs mt-3 flex items-center gap-1">
                   <span>Ad info</span>
                 </div>
               </div>
