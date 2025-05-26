@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { Star, TrendingUp, Award, Users, Trophy, Zap, Heart, LucideIcon } from 'lucide-react';
+import { Star, TrendingUp, Award, Users, Trophy, Zap, Heart } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
@@ -16,7 +16,7 @@ interface TopRatedItem {
 }
 
 interface StatCard {
-  icon: LucideIcon;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   title: string;
   value: string;
   subtitle: string;
