@@ -1,10 +1,11 @@
 
+import React from 'react';
 import Sidebar from '@/components/Sidebar';
-import EnhancedMainFeed from '@/components/EnhancedMainFeed';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
+import EnhancedMainFeed from '@/components/EnhancedMainFeed';
 
-const Index = () => {
+const Index: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-800 flex w-full">
       <Sidebar />
