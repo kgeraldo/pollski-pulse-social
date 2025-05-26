@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -12,6 +11,7 @@ import Community from "./pages/Community";
 import Trending from "./pages/Trending";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Polls from "./pages/Polls";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +24,7 @@ const App: React.FC = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/polls" element={<Polls />} />
             <Route path="/ratings" element={<Ratings />} />
             <Route path="/community" element={<Community />} />
             <Route path="/trending" element={<Trending />} />
