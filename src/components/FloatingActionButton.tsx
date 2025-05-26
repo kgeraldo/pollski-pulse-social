@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
-import { Plus, Video, Image, BarChart3, FileText } from 'lucide-react';
+import { Plus, Video, Image, BarChart3, FileText, LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ActionItem {
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: LucideIcon;
   label: string;
   color: string;
   hoverColor: string;
