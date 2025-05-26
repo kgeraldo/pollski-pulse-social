@@ -1,14 +1,21 @@
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { BarChart3, Users, TrendingUp, Clock, Plus, Search, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import PollCard from '@/components/PollCard';
-import CreatePollModal from '@/components/CreatePollModal';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, TrendingUp, Clock, Users, BarChart3 } from 'lucide-react';
+import { LucideProps } from 'lucide-react';
+
+interface PollOption {
+  id: string;
+  text: string;
+  votes: number;
+  percentage: number;
+}
 
 interface Poll {
   id: string;
@@ -19,12 +26,7 @@ interface Poll {
   timeAgo: string;
   category: string;
   totalVotes: number;
-  options: {
-    id: string;
-    text: string;
-    votes: number;
-    percentage: number;
-  }[];
+  options: PollOption[];
   hasVoted: boolean;
   userVote?: string;
 }
@@ -32,64 +34,46 @@ interface Poll {
 interface FilterOption {
   value: string;
   label: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 }
 
 const Polls: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   const [polls, setPolls] = useState<Poll[]>([
     {
       id: '1',
-      title: 'Which programming language should I learn next?',
-      description: 'I\'m a beginner looking to expand my skills. What would be most valuable in 2024?',
-      author: 'Alex Johnson',
+      title: 'What\'s your favorite programming language?',
+      description: 'Help us understand the community preferences for programming languages in 2024.',
+      author: 'TechSurvey',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop',
       timeAgo: '2h ago',
       category: 'Technology',
-      totalVotes: 324,
-      hasVoted: true,
-      userVote: '2',
+      totalVotes: 1247,
+      hasVoted: false,
       options: [
-        { id: '1', text: 'Python', votes: 98, percentage: 30.2 },
-        { id: '2', text: 'JavaScript', votes: 125, percentage: 38.6 },
-        { id: '3', text: 'Rust', votes: 67, percentage: 20.7 },
-        { id: '4', text: 'Go', votes: 34, percentage: 10.5 }
+        { id: 'js', text: 'JavaScript', votes: 523, percentage: 41.9 },
+        { id: 'py', text: 'Python', votes: 412, percentage: 33.0 },
+        { id: 'ts', text: 'TypeScript', votes: 201, percentage: 16.1 },
+        { id: 'go', text: 'Go', votes: 111, percentage: 8.9 }
       ]
     },
     {
       id: '2',
-      title: 'Best work-from-home setup?',
-      description: 'Setting up a new home office. What\'s most important for productivity?',
-      author: 'Sarah Chen',
+      title: 'Best time for remote work?',
+      description: 'When do you feel most productive while working from home?',
+      author: 'WorkLife',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5b4?w=50&h=50&fit=crop',
-      timeAgo: '4h ago',
+      timeAgo: '5h ago',
       category: 'Lifestyle',
-      totalVotes: 189,
-      hasVoted: false,
+      totalVotes: 892,
+      hasVoted: true,
+      userVote: 'morning',
       options: [
-        { id: '1', text: 'Standing desk', votes: 56, percentage: 29.6 },
-        { id: '2', text: 'Multiple monitors', votes: 78, percentage: 41.3 },
-        { id: '3', text: 'Ergonomic chair', votes: 35, percentage: 18.5 },
-        { id: '4', text: 'Good lighting', votes: 20, percentage: 10.6 }
-      ]
-    },
-    {
-      id: '3',
-      title: 'Favorite design tool for UI/UX?',
-      description: 'Working on a new project and comparing different design tools.',
-      author: 'Mike Rodriguez',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop',
-      timeAgo: '6h ago',
-      category: 'Design',
-      totalVotes: 267,
-      hasVoted: false,
-      options: [
-        { id: '1', text: 'Figma', votes: 156, percentage: 58.4 },
-        { id: '2', text: 'Sketch', votes: 45, percentage: 16.9 },
-        { id: '3', text: 'Adobe XD', votes: 38, percentage: 14.2 },
-        { id: '4', text: 'Framer', votes: 28, percentage: 10.5 }
+        { id: 'morning', text: 'Morning (6-12 PM)', votes: 445, percentage: 49.9 },
+        { id: 'afternoon', text: 'Afternoon (12-6 PM)', votes: 267, percentage: 29.9 },
+        { id: 'evening', text: 'Evening (6-10 PM)', votes: 134, percentage: 15.0 },
+        { id: 'night', text: 'Night (10 PM+)', votes: 46, percentage: 5.2 }
       ]
     }
   ]);
@@ -98,31 +82,30 @@ const Polls: React.FC = () => {
     { value: 'all', label: 'All Polls', icon: BarChart3 },
     { value: 'trending', label: 'Trending', icon: TrendingUp },
     { value: 'recent', label: 'Recent', icon: Clock },
-    { value: 'voted', label: 'My Votes', icon: Users }
+    { value: 'participated', label: 'Participated', icon: Users }
   ];
 
   const handleVote = (pollId: string, optionId: string): void => {
     setPolls(prevPolls =>
       prevPolls.map(poll => {
         if (poll.id === pollId && !poll.hasVoted) {
-          const newOptions = poll.options.map(option => ({
+          const updatedOptions = poll.options.map(option => ({
             ...option,
             votes: option.id === optionId ? option.votes + 1 : option.votes
           }));
           
-          const newTotal = newOptions.reduce((sum, option) => sum + option.votes, 0);
-          
-          const updatedOptions = newOptions.map(option => ({
+          const newTotalVotes = poll.totalVotes + 1;
+          const optionsWithPercentage = updatedOptions.map(option => ({
             ...option,
-            percentage: newTotal > 0 ? (option.votes / newTotal) * 100 : 0
+            percentage: (option.votes / newTotalVotes) * 100
           }));
 
           return {
             ...poll,
-            options: updatedOptions,
-            totalVotes: newTotal,
             hasVoted: true,
-            userVote: optionId
+            userVote: optionId,
+            totalVotes: newTotalVotes,
+            options: optionsWithPercentage
           };
         }
         return poll;
@@ -135,7 +118,7 @@ const Polls: React.FC = () => {
                          poll.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          poll.author.toLowerCase().includes(searchQuery.toLowerCase());
     
-    if (activeFilter === 'voted') {
+    if (activeFilter === 'participated') {
       return matchesSearch && poll.hasVoted;
     }
     
@@ -143,37 +126,24 @@ const Polls: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-slate-900 flex w-full">
+    <div className="min-h-screen bg-slate-800 flex w-full">
       <Sidebar />
-      <div className="flex-1 bg-slate-900">
+      
+      <div className="flex-1 bg-slate-900 min-h-screen">
+        {/* Header */}
         <div className="sticky top-0 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 p-6 z-10">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="max-w-4xl mx-auto"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/20 rounded-xl">
-                  <BarChart3 className="text-blue-400" size={24} />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-white">Community Polls</h1>
-                  <p className="text-slate-400 text-base font-medium">Share your opinion and see what others think</p>
-                </div>
-              </div>
-              
-              <Button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 transition-all duration-200"
-              >
-                <Plus size={18} />
-                Create Poll
-              </Button>
-            </div>
+          <div className="max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <h1 className="text-2xl font-bold text-white mb-1">Community Polls</h1>
+              <p className="text-slate-400 text-sm font-medium">Vote and see what the community thinks</p>
+            </motion.div>
 
-            <div className="space-y-4">
+            {/* Search and Filters */}
+            <div className="mt-6 space-y-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
                 <Input
@@ -204,18 +174,21 @@ const Polls: React.FC = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        <div className="max-w-4xl mx-auto p-6 space-y-6">
-          {filteredPolls.map((poll, index) => (
-            <PollCard
-              key={poll.id}
-              poll={poll}
-              onVote={handleVote}
-              index={index}
-            />
-          ))}
+        {/* Polls */}
+        <div className="max-w-2xl mx-auto p-6 space-y-6">
+          <AnimatePresence mode="wait">
+            {filteredPolls.map((poll, index) => (
+              <PollCard
+                key={poll.id}
+                poll={poll}
+                onVote={handleVote}
+                index={index}
+              />
+            ))}
+          </AnimatePresence>
           
           {filteredPolls.length === 0 && (
             <motion.div
@@ -225,21 +198,14 @@ const Polls: React.FC = () => {
             >
               <BarChart3 className="mx-auto text-slate-600 mb-4" size={48} />
               <h3 className="text-xl font-semibold text-slate-400 mb-2">No polls found</h3>
-              <p className="text-slate-500">Try adjusting your search or create a new poll!</p>
+              <p className="text-slate-500">Try adjusting your search or check back later!</p>
             </motion.div>
           )}
         </div>
       </div>
+
       <RightSidebar />
       <FloatingActionButton />
-      <CreatePollModal 
-        isOpen={showCreateModal} 
-        onClose={() => setShowCreateModal(false)}
-        onCreatePoll={(newPoll) => {
-          setPolls(prev => [newPoll, ...prev]);
-          setShowCreateModal(false);
-        }}
-      />
     </div>
   );
 };

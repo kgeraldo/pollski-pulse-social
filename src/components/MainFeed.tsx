@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Share, MoreHorizontal, TrendingUp, Clock, Users, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LucideProps } from 'lucide-react';
 
 interface Post {
   id: number;
@@ -26,7 +26,7 @@ interface Post {
 interface FilterOption {
   value: string;
   label: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 }
 
 const MainFeed: React.FC = () => {
