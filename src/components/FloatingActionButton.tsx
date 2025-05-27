@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Plus, Video, Image, BarChart3, FileText, LucideIcon } from 'lucide-react';
+import { Plus, Video, Image, BarChart3, FileText, LucideIcon, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CreatePostModal from './CreatePostModal';
 
@@ -17,6 +17,7 @@ const FloatingActionButton: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [createPostType, setCreatePostType] = useState<'text' | 'image' | 'video' | 'poll'>('text');
+  const [isHovered, setIsHovered] = useState(false);
 
   const actions: ActionItem[] = [
     { 
@@ -91,10 +92,16 @@ const FloatingActionButton: React.FC = () => {
                     <motion.button
                       whileHover={{ scale: 1.1, x: -8 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`w-14 h-14 rounded-2xl ${action.color} ${action.hoverColor} flex items-center justify-center text-white shadow-xl ${action.shadowColor} transition-all duration-300 backdrop-blur-md border border-white/10`}
+                      className={`w-14 h-14 rounded-2xl ${action.color} ${action.hoverColor} flex items-center justify-center text-white shadow-xl ${action.shadowColor} transition-all duration-300 backdrop-blur-md border border-white/10 relative overflow-hidden`}
                       onClick={() => handleActionClick(action)}
                     >
-                      <IconComponent size={22} />
+                      <motion.div
+                        className="absolute inset-0 bg-white/10"
+                        initial={{ scale: 0, opacity: 0 }}
+                        whileHover={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <IconComponent size={22} className="relative z-10" />
                     </motion.button>
                     
                     <motion.div
@@ -115,15 +122,39 @@ const FloatingActionButton: React.FC = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.9 }}
+          onHoverStart={() => setIsHovered(true)}
+          onHoverEnd={() => setIsHovered(false)}
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-blue-600/25 transition-all duration-300 backdrop-blur-md border border-white/10"
+          className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-blue-600/25 transition-all duration-300 backdrop-blur-md border border-white/10 relative overflow-hidden"
         >
+          <motion.div
+            className="absolute inset-0 bg-white/10"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ 
+              scale: isHovered ? 1 : 0, 
+              opacity: isHovered ? 1 : 0 
+            }}
+            transition={{ duration: 0.3 }}
+          />
+          
           <motion.div
             animate={{ rotate: isExpanded ? 45 : 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="relative z-10"
           >
             <Plus size={26} strokeWidth={2.5} />
           </motion.div>
+
+          {!isExpanded && (
+            <motion.div
+              className="absolute top-1 right-1"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Sparkles size={12} className="text-yellow-400" />
+            </motion.div>
+          )}
         </motion.button>
       </div>
 
