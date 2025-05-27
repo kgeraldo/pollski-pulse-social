@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { Plus, Video, Image, BarChart3, FileText, LucideIcon, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PostType } from '@/types';
 import CreatePostModal from './CreatePostModal';
 
 interface ActionItem {
@@ -10,13 +10,13 @@ interface ActionItem {
   color: string;
   hoverColor: string;
   shadowColor: string;
-  type: 'text' | 'image' | 'video' | 'poll';
+  type: PostType;
 }
 
 const FloatingActionButton: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [createPostType, setCreatePostType] = useState<'text' | 'image' | 'video' | 'poll'>('text');
+  const [createPostType, setCreatePostType] = useState<PostType>('text');
   const [isHovered, setIsHovered] = useState(false);
 
   const actions: ActionItem[] = [

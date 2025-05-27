@@ -1,8 +1,15 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Settings, LogOut, Crown, Shield, HelpCircle, Moon, Sun } from 'lucide-react';
+import { User, Settings, LogOut, Crown, HelpCircle, Moon, Sun, LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { User as UserType } from '@/types';
+
+interface MenuItem {
+  icon: LucideIcon;
+  label: string;
+  action: () => void;
+  isPro?: boolean;
+}
 
 interface UserAvatarDropdownProps {
   isOpen: boolean;
@@ -17,7 +24,7 @@ const UserAvatarDropdown: React.FC<UserAvatarDropdownProps> = ({
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   
-  const user = {
+  const user: UserType = {
     name: 'Guest User',
     email: 'guest@example.com',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop',
@@ -25,7 +32,7 @@ const UserAvatarDropdown: React.FC<UserAvatarDropdownProps> = ({
     isPro: false
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { icon: User, label: 'Profile', action: () => console.log('Profile') },
     { icon: Settings, label: 'Settings', action: () => console.log('Settings') },
     { icon: Crown, label: 'Upgrade to Pro', action: () => console.log('Upgrade'), isPro: true },
