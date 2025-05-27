@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Image, Video, BarChart3, FileText, Smile, Hash, Send } from 'lucide-react';
+import { X, Image, Video, BarChart3, FileText, Hash, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import MentionTextarea from './MentionTextarea';
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -93,16 +93,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
             </div>
 
             <div className="space-y-6">
-              {/* Content */}
+              {/* Content with Mention Support */}
               <div>
                 <label className="text-sm font-semibold text-white mb-3 block">
                   {postType === 'poll' ? 'Poll Question' : 'Content'}
                 </label>
-                <Textarea
-                  placeholder={postType === 'poll' ? 'What would you like to ask?' : 'Share your thoughts...'}
+                <MentionTextarea
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="min-h-[120px] bg-slate-700 border-slate-600 text-white placeholder-slate-400 resize-none"
+                  onChange={setContent}
+                  placeholder={postType === 'poll' ? 'What would you like to ask? Type @ to mention someone...' : 'Share your thoughts... Type @ to mention someone...'}
+                  className="bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+                  minHeight={120}
                 />
               </div>
 

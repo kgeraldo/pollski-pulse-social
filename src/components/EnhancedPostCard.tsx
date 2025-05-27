@@ -5,6 +5,7 @@ import { Heart, MessageCircle, Share, MoreHorizontal, Bookmark, Flag, Tag, Arrow
 import { Button } from '@/components/ui/button';
 import VoteButton from './VoteButton';
 import CommentSystem from './CommentSystem';
+import { useMentions } from '@/hooks/useMentions';
 
 interface Comment {
   id: string;
@@ -66,6 +67,8 @@ const EnhancedPostCard: React.FC<EnhancedPostCardProps> = ({
   onToggleCollapse,
   index = 0
 }) => {
+  const { formatTextWithMentions } = useMentions();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -116,9 +119,10 @@ const EnhancedPostCard: React.FC<EnhancedPostCardProps> = ({
             </div>
           </div>
 
-          <p className="text-slate-100 text-sm leading-relaxed mb-3 font-medium">
-            {post.content}
-          </p>
+          {/* Post Content with Mention Support */}
+          <div className="text-slate-100 text-sm leading-relaxed mb-3 font-medium">
+            {formatTextWithMentions(post.content)}
+          </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5 mb-3">

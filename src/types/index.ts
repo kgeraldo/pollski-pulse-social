@@ -24,6 +24,7 @@ export interface Comment {
   isCollapsed: boolean;
   depth: number;
   isAwarded?: boolean;
+  mentions?: string[]; // Array of mentioned usernames
 }
 
 export interface PollOption {
@@ -66,6 +67,7 @@ export interface Post {
   videoUrl?: string;
   thumbnail?: string;
   poll?: Poll;
+  mentions?: string[]; // Array of mentioned usernames
 }
 
 export interface FilterOptions {

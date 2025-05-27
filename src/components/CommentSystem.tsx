@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, MessageCircle, Award, Flag, Share, MoreHorizontal, Reply, ArrowUp, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import MentionTextarea from './MentionTextarea';
+import { useMentions } from '@/hooks/useMentions';
 
 interface Comment {
   id: string;
@@ -38,6 +39,7 @@ const CommentItem: React.FC<{
 }> = ({ comment, onVote, onToggleCollapse, onReply }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [replyContent, setReplyContent] = useState('');
+  const { formatTextWithMentions } = useMentions();
 
   const handleReplySubmit = () => {
     if (replyContent.trim()) {
@@ -101,9 +103,11 @@ const CommentItem: React.FC<{
           </div>
         </div>
 
-        {/* Comment Content */}
+        {/* Comment Content with Mention Support */}
         <div className="mb-2">
-          <p className="text-slate-200 text-xs leading-relaxed">{comment.content}</p>
+          <div className="text-slate-200 text-xs leading-relaxed">
+            {formatTextWithMentions(comment.content)}
+          </div>
         </div>
 
         {/* Comment Actions */}
@@ -164,7 +168,7 @@ const CommentItem: React.FC<{
           </Button>
         </div>
 
-        {/* Reply Box */}
+        {/* Reply Box with Mention Support */}
         <AnimatePresence>
           {showReplyBox && (
             <motion.div
@@ -174,11 +178,12 @@ const CommentItem: React.FC<{
               className="mt-3 pt-3 border-t border-slate-700/40"
             >
               <div className="space-y-2">
-                <Textarea
-                  placeholder="What are your thoughts?"
+                <MentionTextarea
                   value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 min-h-[64px] text-xs"
+                  onChange={setReplyContent}
+                  placeholder="What are your thoughts? Type @ to mention someone..."
+                  className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 text-xs"
+                  minHeight={64}
                 />
                 <div className="flex gap-1.5">
                   <Button
@@ -302,13 +307,14 @@ const CommentSystem: React.FC<CommentSystemProps> = ({
           </div>
         </div>
 
-        {/* New Comment Box */}
+        {/* New Comment Box with Mention Support */}
         <div className="space-y-2">
-          <Textarea
-            placeholder="Join the conversation..."
+          <MentionTextarea
             value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 min-h-[80px] text-sm"
+            onChange={setNewComment}
+            placeholder="Join the conversation... Type @ to mention someone..."
+            className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 text-sm"
+            minHeight={80}
           />
           <div className="flex justify-end">
             <Button
