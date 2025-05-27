@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { Star, TrendingUp, Award, Users, Trophy, Zap, Heart } from 'lucide-react';
+import { Star, TrendingUp, Award, Users, Trophy, Zap, Heart, LucideIcon } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
@@ -16,7 +16,7 @@ interface TopRatedItem {
 }
 
 interface StatCard {
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: LucideIcon;
   title: string;
   value: string;
   subtitle: string;
@@ -103,29 +103,32 @@ const Ratings: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
           >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="bg-slate-800 p-6 rounded-2xl border border-slate-700 hover:border-slate-600 transition-all duration-300 group shadow-xl hover:shadow-2xl"
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className={`p-3 ${stat.bgColor} rounded-xl transition-transform duration-300 group-hover:scale-110`}>
-                    <stat.icon size={24} className={stat.color} />
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <motion.div
+                  key={stat.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.4 }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  className="bg-slate-800 p-6 rounded-2xl border border-slate-700 hover:border-slate-600 transition-all duration-300 group shadow-xl hover:shadow-2xl"
+                >
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className={`p-3 ${stat.bgColor} rounded-xl transition-transform duration-300 group-hover:scale-110`}>
+                      <IconComponent size={24} className={stat.color} />
+                    </div>
+                    <h3 className="font-bold text-white text-lg group-hover:text-blue-100 transition-colors duration-200">
+                      {stat.title}
+                    </h3>
                   </div>
-                  <h3 className="font-bold text-white text-lg group-hover:text-blue-100 transition-colors duration-200">
-                    {stat.title}
-                  </h3>
-                </div>
-                <p className="text-3xl font-bold text-white mb-1 group-hover:text-blue-100 transition-colors duration-200">
-                  {stat.value}
-                </p>
-                <p className="text-slate-400 text-sm font-medium">{stat.subtitle}</p>
-              </motion.div>
-            ))}
+                  <p className="text-3xl font-bold text-white mb-1 group-hover:text-blue-100 transition-colors duration-200">
+                    {stat.value}
+                  </p>
+                  <p className="text-slate-400 text-sm font-medium">{stat.subtitle}</p>
+                </motion.div>
+              );
+            })}
           </motion.div>
 
           <div className="space-y-4">

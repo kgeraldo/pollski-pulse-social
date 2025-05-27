@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Share, MoreHorizontal, TrendingUp, Clock, Users, Search, Bookmark, Flag, Tag, User, LogIn } from 'lucide-react';
+import { Heart, MessageCircle, Share, MoreHorizontal, TrendingUp, Clock, Users, Search, Bookmark, Flag, Tag, User, LogIn, Filter, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +7,8 @@ import EnhancedPostCard from './EnhancedPostCard';
 import VideoCard from './VideoCard';
 import PollCard from './PollCard';
 import AuthPages from './AuthPages';
+import AdvancedSearchFilter from './AdvancedSearchFilter';
+import CreatePostModal from './CreatePostModal';
 import { LucideProps } from 'lucide-react';
 
 interface Comment {
@@ -70,11 +72,32 @@ interface FilterOption {
   icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 }
 
+interface FilterOptions {
+  category: string;
+  timeRange: string;
+  sortBy: string;
+  minRating: number;
+  author: string;
+  tags: string[];
+}
+
 const EnhancedMainFeed: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [createPostType, setCreatePostType] = useState<'text' | 'image' | 'video' | 'poll'>('text');
+  const [advancedFilters, setAdvancedFilters] = useState<FilterOptions>({
+    category: 'All',
+    timeRange: 'All Time',
+    sortBy: 'Most Recent',
+    minRating: 0,
+    author: '',
+    tags: []
+  });
+
   const [posts, setPosts] = useState<Post[]>([
     {
       id: 1,
@@ -379,6 +402,11 @@ const EnhancedMainFeed: React.FC = () => {
     );
   };
 
+  const handleCreatePost = (type: 'text' | 'image' | 'video' | 'poll') => {
+    setCreatePostType(type);
+    setShowCreatePost(true);
+  };
+
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          post.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -460,6 +488,14 @@ const EnhancedMainFeed: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
+                  onClick={() => handleCreatePost('text')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs h-8"
+                >
+                  <Plus size={12} className="mr-1.5" />
+                  Create
+                </Button>
+                <Button
+                  size="sm"
                   onClick={() => { setAuthMode('login'); setShowAuth(true); }}
                   className="bg-slate-700 hover:bg-slate-600 text-white text-xs h-8"
                 >
@@ -480,15 +516,24 @@ const EnhancedMainFeed: React.FC = () => {
           </motion.div>
 
           <div className="mt-4 space-y-3">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-slate-400" size={14} />
-              <Input
-                type="text"
-                placeholder="Search posts, users, and tags..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-slate-800 border-slate-600 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500/16 transition-all duration-160 text-sm h-9"
-              />
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
+                <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-slate-400" size={14} />
+                <Input
+                  type="text"
+                  placeholder="Search posts, users, and tags..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 bg-slate-800 border-slate-600 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500/16 transition-all duration-160 text-sm h-9"
+                />
+              </div>
+              <Button
+                size="sm"
+                onClick={() => setShowAdvancedFilter(true)}
+                className="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 h-9 px-3"
+              >
+                <Filter size={14} />
+              </Button>
             </div>
 
             <div className="flex gap-1.5 overflow-x-auto">
@@ -537,6 +582,21 @@ const EnhancedMainFeed: React.FC = () => {
             mode={authMode}
             onModeChange={setAuthMode}
             onClose={() => setShowAuth(false)}
+          />
+        )}
+        {showAdvancedFilter && (
+          <AdvancedSearchFilter
+            isOpen={showAdvancedFilter}
+            onClose={() => setShowAdvancedFilter(false)}
+            onApplyFilters={setAdvancedFilters}
+            currentFilters={advancedFilters}
+          />
+        )}
+        {showCreatePost && (
+          <CreatePostModal
+            isOpen={showCreatePost}
+            onClose={() => setShowCreatePost(false)}
+            postType={createPostType}
           />
         )}
       </AnimatePresence>
