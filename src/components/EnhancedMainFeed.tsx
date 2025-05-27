@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import EnhancedPostCard from './EnhancedPostCard';
+import VideoCard from './VideoCard';
+import PollCard from './PollCard';
 import AuthPages from './AuthPages';
 import { LucideProps } from 'lucide-react';
 
@@ -44,6 +46,22 @@ interface Post {
   isBookmarked: boolean;
   showComments?: boolean;
   commentsData?: Comment[];
+  type?: 'text' | 'video' | 'poll';
+  videoUrl?: string;
+  thumbnail?: string;
+  poll?: {
+    question: string;
+    description: string;
+    totalVotes: number;
+    options: Array<{
+      id: string;
+      text: string;
+      votes: number;
+      percentage: number;
+    }>;
+    hasVoted: boolean;
+    userVote?: string;
+  };
 }
 
 interface FilterOption {
@@ -72,6 +90,7 @@ const EnhancedMainFeed: React.FC = () => {
       isVoted: null,
       isBookmarked: false,
       showComments: false,
+      type: 'text',
       commentsData: [
         {
           id: 'c1',
@@ -115,7 +134,53 @@ const EnhancedMainFeed: React.FC = () => {
       isVoted: 'up',
       isBookmarked: true,
       showComments: false,
+      type: 'text',
       commentsData: []
+    },
+    {
+      id: 3,
+      author: 'Mike Rodriguez',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop',
+      timeAgo: '3h ago',
+      content: 'Check out this amazing tutorial on building modern React applications! This covers all the latest best practices.',
+      votes: { up: 156, down: 12 },
+      comments: 34,
+      shares: 28,
+      category: 'Education',
+      tags: ['tutorial', 'react', 'development'],
+      isVoted: null,
+      isBookmarked: false,
+      type: 'video',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      thumbnail: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=600&h=300&fit=crop'
+    },
+    {
+      id: 4,
+      author: 'Emma Wilson',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5b4?w=50&h=50&fit=crop',
+      timeAgo: '5h ago',
+      content: 'Which programming language should I learn next for web development?',
+      votes: { up: 67, down: 3 },
+      comments: 45,
+      shares: 12,
+      category: 'Technology',
+      tags: ['programming', 'learning', 'career'],
+      isVoted: null,
+      isBookmarked: false,
+      type: 'poll',
+      poll: {
+        question: 'Best language for modern web development?',
+        description: 'Considering job market, learning curve, and future prospects',
+        totalVotes: 342,
+        options: [
+          { id: 'js', text: 'JavaScript/TypeScript', votes: 145, percentage: 42.4 },
+          { id: 'py', text: 'Python', votes: 98, percentage: 28.7 },
+          { id: 'go', text: 'Go', votes: 67, percentage: 19.6 },
+          { id: 'rust', text: 'Rust', votes: 32, percentage: 9.4 }
+        ],
+        hasVoted: false,
+        userVote: undefined
+      }
     }
   ]);
 
@@ -283,6 +348,37 @@ const EnhancedMainFeed: React.FC = () => {
     );
   };
 
+  const handlePollVote = (pollId: string, optionId: string): void => {
+    setPosts(prevPosts =>
+      prevPosts.map(post => {
+        if (post.id === parseInt(pollId) && post.poll && !post.poll.hasVoted) {
+          const updatedOptions = post.poll.options.map(option => ({
+            ...option,
+            votes: option.id === optionId ? option.votes + 1 : option.votes
+          }));
+
+          const newTotalVotes = post.poll.totalVotes + 1;
+          const optionsWithPercentage = updatedOptions.map(option => ({
+            ...option,
+            percentage: (option.votes / newTotalVotes) * 100
+          }));
+
+          return {
+            ...post,
+            poll: {
+              ...post.poll,
+              options: optionsWithPercentage,
+              totalVotes: newTotalVotes,
+              hasVoted: true,
+              userVote: optionId
+            }
+          };
+        }
+        return post;
+      })
+    );
+  };
+
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          post.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -294,6 +390,61 @@ const EnhancedMainFeed: React.FC = () => {
     
     return matchesSearch;
   });
+
+  const renderPostCard = (post: Post, index: number) => {
+    if (post.type === 'video') {
+      return (
+        <VideoCard
+          key={post.id}
+          post={{
+            ...post,
+            videoUrl: post.videoUrl!,
+            thumbnail: post.thumbnail!
+          }}
+          onVote={handleVote}
+          onBookmark={handleBookmark}
+          index={index}
+        />
+      );
+    }
+    
+    if (post.type === 'poll') {
+      return (
+        <PollCard
+          key={post.id}
+          poll={{
+            id: post.id.toString(),
+            title: post.poll!.question,
+            description: post.poll!.description,
+            author: post.author,
+            avatar: post.avatar,
+            timeAgo: post.timeAgo,
+            category: post.category,
+            totalVotes: post.poll!.totalVotes,
+            options: post.poll!.options,
+            hasVoted: post.poll!.hasVoted,
+            userVote: post.poll!.userVote
+          }}
+          onVote={handlePollVote}
+          index={index}
+        />
+      );
+    }
+
+    return (
+      <EnhancedPostCard
+        key={post.id}
+        post={post}
+        onVote={handleVote}
+        onBookmark={handleBookmark}
+        onToggleComments={handleToggleComments}
+        onCommentSubmit={handleCommentSubmit}
+        onCommentVote={handleCommentVote}
+        onToggleCollapse={handleToggleCollapse}
+        index={index}
+      />
+    );
+  };
 
   return (
     <div className="flex-1 bg-slate-900 min-h-screen">
@@ -364,19 +515,7 @@ const EnhancedMainFeed: React.FC = () => {
 
       <div className="max-w-2xl mx-auto p-4 space-y-4">
         <AnimatePresence mode="wait">
-          {filteredPosts.map((post, index) => (
-            <EnhancedPostCard
-              key={post.id}
-              post={post}
-              onVote={handleVote}
-              onBookmark={handleBookmark}
-              onToggleComments={handleToggleComments}
-              onCommentSubmit={handleCommentSubmit}
-              onCommentVote={handleCommentVote}
-              onToggleCollapse={handleToggleCollapse}
-              index={index}
-            />
-          ))}
+          {filteredPosts.map((post, index) => renderPostCard(post, index))}
         </AnimatePresence>
         
         {filteredPosts.length === 0 && (
