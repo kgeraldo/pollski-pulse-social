@@ -10,6 +10,8 @@ import CreatePostModal from './CreatePostModal';
 import EnhancedHeader from './EnhancedHeader';
 import PostFilters from './feed/PostFilters';
 import PostList from './feed/PostList';
+import LoadingStates from './LoadingStates';
+import EmptyState from './EmptyState';
 
 const EnhancedMainFeed: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
@@ -63,17 +65,29 @@ const EnhancedMainFeed: React.FC = () => {
           onFilterChange={setActiveFilter} 
         />
 
-        <PostList
-          posts={filteredPosts}
-          isLoading={isLoading}
-          onVote={handleVote}
-          onBookmark={handleBookmark}
-          onToggleComments={handleToggleComments}
-          onCommentSubmit={handleCommentSubmit}
-          onCommentVote={handleCommentVote}
-          onToggleCollapse={handleToggleCollapse}
-          onPollVote={handlePollVote}
-        />
+        {isLoading ? (
+          <LoadingStates count={4} type="posts" />
+        ) : filteredPosts.length === 0 ? (
+          <EmptyState
+            type={searchQuery ? 'search' : 'posts'}
+            title={searchQuery ? 'No posts found' : undefined}
+            description={searchQuery ? `No results for "${searchQuery}". Try different keywords or check your spelling.` : undefined}
+            actionLabel={searchQuery ? 'Clear Search' : 'Create Post'}
+            onAction={searchQuery ? () => setSearchQuery('') : () => handleCreatePost('text')}
+          />
+        ) : (
+          <PostList
+            posts={filteredPosts}
+            isLoading={isLoading}
+            onVote={handleVote}
+            onBookmark={handleBookmark}
+            onToggleComments={handleToggleComments}
+            onCommentSubmit={handleCommentSubmit}
+            onCommentVote={handleCommentVote}
+            onToggleCollapse={handleToggleCollapse}
+            onPollVote={handlePollVote}
+          />
+        )}
       </div>
 
       <AnimatePresence>

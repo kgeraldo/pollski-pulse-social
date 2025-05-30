@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Bell, Plus, User, LogIn, Filter, Sparkles } from 'lucide-react';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationCenter from './NotificationCenter';
 import UserAvatarDropdown from './UserAvatarDropdown';
+import ThemeToggle from './ThemeToggle';
 
 interface EnhancedHeaderProps {
   searchQuery: string;
@@ -54,6 +54,8 @@ const EnhancedHeader: React.FC<EnhancedHeaderProps> = ({
               </div>
               
               <div className="flex items-center gap-2">
+                <ThemeToggle />
+                
                 <Button
                   size="sm"
                   onClick={onCreatePost}
