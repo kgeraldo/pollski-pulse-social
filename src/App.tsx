@@ -14,6 +14,7 @@ import Trending from "./pages/Trending";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Polls from "./pages/Polls";
+import Bookmarks from "./pages/Bookmarks";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App: React.FC = () => (
               <Route path="/trending" element={<Trending />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
