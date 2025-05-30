@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { MentionUser, Mention, MentionSuggestion } from '@/types/mention';
 
 // Mock users data - in a real app this would come from an API
@@ -89,35 +89,37 @@ export const useMentions = () => {
     return mentions;
   }, []);
 
-  const formatTextWithMentions = useCallback((text: string): JSX.Element => {
+  const formatTextWithMentions = useCallback((text: string) => {
     const mentions = parseMentions(text);
     
     if (mentions.length === 0) {
-      return <span>{text}</span>;
+      return React.createElement('span', null, text);
     }
 
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactElement[] = [];
     let lastIndex = 0;
 
     mentions.forEach((mention, index) => {
       // Add text before mention
       if (mention.startIndex > lastIndex) {
         parts.push(
-          <span key={`text-${index}`}>
-            {text.slice(lastIndex, mention.startIndex)}
-          </span>
+          React.createElement('span', 
+            { key: `text-${index}` },
+            text.slice(lastIndex, mention.startIndex)
+          )
         );
       }
 
       // Add mention
       parts.push(
-        <span
-          key={`mention-${index}`}
-          className="text-blue-400 hover:text-blue-300 cursor-pointer font-medium"
-          onClick={() => console.log('Navigate to user:', mention.username)}
-        >
-          @{mention.username}
-        </span>
+        React.createElement('span',
+          {
+            key: `mention-${index}`,
+            className: "text-blue-400 hover:text-blue-300 cursor-pointer font-medium",
+            onClick: () => console.log('Navigate to user:', mention.username)
+          },
+          `@${mention.username}`
+        )
       );
 
       lastIndex = mention.endIndex;
@@ -126,13 +128,14 @@ export const useMentions = () => {
     // Add remaining text
     if (lastIndex < text.length) {
       parts.push(
-        <span key="text-end">
-          {text.slice(lastIndex)}
-        </span>
+        React.createElement('span',
+          { key: "text-end" },
+          text.slice(lastIndex)
+        )
       );
     }
 
-    return <>{parts}</>;
+    return React.createElement(React.Fragment, null, ...parts);
   }, [parseMentions]);
 
   return {
