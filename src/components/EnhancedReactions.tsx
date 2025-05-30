@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Laugh, ThumbsUp, Angry, Sad, Users } from 'lucide-react';
+import { Heart, Laugh, ThumbsUp, Angry, Frown, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -25,7 +24,7 @@ const reactionConfig = {
   love: { icon: Heart, color: 'text-red-500', bgColor: 'bg-red-500/10', emoji: '❤️' },
   laugh: { icon: Laugh, color: 'text-yellow-500', bgColor: 'bg-yellow-500/10', emoji: '😂' },
   angry: { icon: Angry, color: 'text-orange-500', bgColor: 'bg-orange-500/10', emoji: '😠' },
-  sad: { icon: Sad, color: 'text-purple-500', bgColor: 'bg-purple-500/10', emoji: '😢' }
+  sad: { icon: Frown, color: 'text-purple-500', bgColor: 'bg-purple-500/10', emoji: '😢' }
 };
 
 const EnhancedReactions: React.FC<EnhancedReactionsProps> = ({
