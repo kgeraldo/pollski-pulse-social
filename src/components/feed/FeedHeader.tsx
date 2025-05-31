@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, TrendingUp, Clock, Users } from 'lucide-react';
@@ -8,7 +7,7 @@ import { Input } from '@/components/ui/input';
 interface FilterOption {
   value: string;
   label: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: React.ComponentType<any>;
 }
 
 interface FeedHeaderProps {
