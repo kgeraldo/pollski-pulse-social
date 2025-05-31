@@ -1,21 +1,15 @@
 
-export interface MentionUser {
+export interface MentionSuggestion {
   id: string;
   username: string;
   displayName: string;
   avatar: string;
   isVerified?: boolean;
+  isOnline?: boolean;
 }
 
-export interface Mention {
-  id: string;
-  userId: string;
+export interface MentionMatch {
+  start: number;
+  end: number;
   username: string;
-  displayName: string;
-  startIndex: number;
-  endIndex: number;
-}
-
-export interface MentionSuggestion extends MentionUser {
-  relevanceScore?: number;
 }

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface UseInfiniteScrollProps {
   fetchMore: () => Promise<void>;
@@ -15,24 +15,38 @@ export const useInfiniteScroll = ({
   threshold = 100
 }: UseInfiniteScrollProps) => {
   const [isFetching, setIsFetching] = useState(false);
+  const lastFetchTime = useRef(0);
+  const minFetchInterval = 1000; // Prevent rapid successive calls
 
   const handleScroll = useCallback(() => {
+    const now = Date.now();
+    if (now - lastFetchTime.current < minFetchInterval) return;
+
     if (window.innerHeight + document.documentElement.scrollTop 
         >= document.documentElement.offsetHeight - threshold) {
       if (hasMore && !isLoading && !isFetching) {
         setIsFetching(true);
+        lastFetchTime.current = now;
       }
     }
   }, [hasMore, isLoading, isFetching, threshold]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const throttledScroll = () => {
+      requestAnimationFrame(handleScroll);
+    };
+
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    return () => window.removeEventListener('scroll', throttledScroll);
   }, [handleScroll]);
 
   useEffect(() => {
     if (isFetching && hasMore) {
-      fetchMore().finally(() => setIsFetching(false));
+      fetchMore()
+        .catch((error) => {
+          console.error('Error fetching more data:', error);
+        })
+        .finally(() => setIsFetching(false));
     }
   }, [isFetching, fetchMore, hasMore]);
 

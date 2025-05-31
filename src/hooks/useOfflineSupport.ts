@@ -26,7 +26,7 @@ export const useOfflineSupport = () => {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Load cached data
+    // Load cached data on mount
     loadCachedData();
 
     return () => {
@@ -37,18 +37,26 @@ export const useOfflineSupport = () => {
 
   const cachePosts = (posts: Post[]) => {
     setCachedPosts(posts);
-    localStorage.setItem('cachedPosts', JSON.stringify(posts));
+    try {
+      localStorage.setItem('cachedPosts', JSON.stringify(posts));
+    } catch (error) {
+      console.error('Failed to cache posts:', error);
+    }
   };
 
   const loadCachedData = () => {
-    const cached = localStorage.getItem('cachedPosts');
-    if (cached) {
-      setCachedPosts(JSON.parse(cached));
-    }
+    try {
+      const cached = localStorage.getItem('cachedPosts');
+      if (cached) {
+        setCachedPosts(JSON.parse(cached));
+      }
 
-    const queued = localStorage.getItem('queuedActions');
-    if (queued) {
-      setQueuedActions(JSON.parse(queued));
+      const queued = localStorage.getItem('queuedActions');
+      if (queued) {
+        setQueuedActions(JSON.parse(queued));
+      }
+    } catch (error) {
+      console.error('Failed to load cached data:', error);
     }
   };
 
@@ -61,18 +69,27 @@ export const useOfflineSupport = () => {
 
     const updated = [...queuedActions, newAction];
     setQueuedActions(updated);
-    localStorage.setItem('queuedActions', JSON.stringify(updated));
+    
+    try {
+      localStorage.setItem('queuedActions', JSON.stringify(updated));
+    } catch (error) {
+      console.error('Failed to queue action:', error);
+    }
   };
 
   const syncQueuedActions = async () => {
     if (queuedActions.length === 0) return;
 
-    // Here you would sync with your backend
-    console.log('Syncing queued actions:', queuedActions);
-    
-    // Clear queue after successful sync
-    setQueuedActions([]);
-    localStorage.removeItem('queuedActions');
+    try {
+      // Here you would sync with your backend
+      console.log('Syncing queued actions:', queuedActions);
+      
+      // Clear queue after successful sync
+      setQueuedActions([]);
+      localStorage.removeItem('queuedActions');
+    } catch (error) {
+      console.error('Failed to sync queued actions:', error);
+    }
   };
 
   return {
