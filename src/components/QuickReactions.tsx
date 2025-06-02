@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Heart, Smile, ThumbsUp, Fire, Star } from 'lucide-react';
+import { Plus, Heart, Smile, ThumbsUp, Flame, Star } from 'lucide-react';
 
 interface Reaction {
   id: string;
