@@ -1,171 +1,189 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Calendar, Star, Bookmark } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import ActivityWidget from './ActivityWidget';
+import UserSuggestions from './UserSuggestions';
 import TrendingTopics from './TrendingTopics';
+import ProfileCard from './ProfileCard';
+import NotificationSystem from './NotificationSystem';
+import { Calendar, Settings, Users, Bell } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const EnhancedRightSidebar: React.FC = () => {
-  const suggestions = [
+  const [activeTab, setActiveTab] = useState<'activity' | 'profile' | 'notifications'>('activity');
+
+  // Mock data
+  const mockUser = {
+    id: '1',
+    name: 'Alex Johnson',
+    username: '@alexjohnson',
+    bio: 'Frontend Developer | React Enthusiast | Coffee Lover ☕ Building amazing user experiences one component at a time.',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
+    coverImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=200&fit=crop',
+    location: 'San Francisco, CA',
+    joinedDate: 'March 2023',
+    website: 'https://alexjohnson.dev',
+    followers: 1247,
+    following: 892,
+    posts: 156,
+    isVerified: true,
+    isPremium: true,
+    isFollowing: false
+  };
+
+  const mockNotifications = [
     {
-      id: 1,
-      name: 'Sarah Chen',
-      username: '@sarah_dev',
+      id: '1',
+      type: 'like' as const,
+      title: 'New likes on your post',
+      message: 'Sarah and 12 others liked your post about React 19 features',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5b4?w=50&h=50&fit=crop',
-      isVerified: true,
-      followers: '2.1k'
+      timestamp: '2024-01-15T10:30:00Z',
+      isRead: false,
+      isNew: true
     },
     {
-      id: 2,
-      name: 'Mike Wilson',
-      username: '@mike_design',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop',
-      isVerified: false,
-      followers: '892'
-    },
-    {
-      id: 3,
-      name: 'Alex Rivera',
-      username: '@alex_code',
+      id: '2',
+      type: 'follow' as const,
+      title: 'New follower',
+      message: 'David Rodriguez started following you',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop',
-      isVerified: true,
-      followers: '1.5k'
+      timestamp: '2024-01-15T09:15:00Z',
+      isRead: false,
+      isNew: true
+    },
+    {
+      id: '3',
+      type: 'comment' as const,
+      title: 'New comment',
+      message: 'Emily commented on your post: "This is exactly what I was looking for!"',
+      timestamp: '2024-01-15T08:45:00Z',
+      isRead: true,
+      isNew: false
+    },
+    {
+      id: '4',
+      type: 'achievement' as const,
+      title: 'Achievement unlocked!',
+      message: 'You reached 1000 followers! Keep up the great work.',
+      timestamp: '2024-01-14T16:20:00Z',
+      isRead: true,
+      isNew: false
     }
   ];
 
   const upcomingEvents = [
-    { id: 1, title: 'React Conference 2024', date: 'Dec 15', type: 'Conference' },
-    { id: 2, title: 'Web Dev Meetup', date: 'Dec 18', type: 'Meetup' },
-    { id: 3, title: 'TypeScript Workshop', date: 'Dec 22', type: 'Workshop' }
+    {
+      id: '1',
+      title: 'React Meetup',
+      date: '2024-01-20',
+      time: '6:00 PM',
+      location: 'Tech Hub SF'
+    },
+    {
+      id: '2',
+      title: 'Frontend Workshop',
+      date: '2024-01-22',
+      time: '2:00 PM',
+      location: 'Online'
+    }
   ];
 
+  const tabs = [
+    { id: 'activity', label: 'Activity', icon: Users },
+    { id: 'profile', label: 'Profile', icon: Settings },
+    { id: 'notifications', label: 'Notifications', icon: Bell }
+  ] as const;
+
   return (
-    <div className="w-80 p-4 bg-slate-900 border-l border-slate-700 overflow-y-auto">
-      <div className="space-y-6">
-        {/* Trending Topics */}
-        <TrendingTopics />
-
-        {/* Suggested Users */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-white text-lg">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <Users size={16} className="text-white" />
-              </div>
-              Who to Follow
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {suggestions.map((user, index) => (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-200"
+    <div className="w-80 bg-slate-900 border-l border-slate-700 p-4 overflow-y-auto h-screen">
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4 }}
+        className="space-y-6"
+      >
+        {/* Tab Navigation */}
+        <div className="flex bg-slate-800/50 rounded-lg p-1 border border-slate-700">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <Button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 h-8 text-xs transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/50'
+                }`}
               >
-                <div className="flex items-center gap-3">
-                  <motion.img
-                    whileHover={{ scale: 1.05 }}
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-600"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-white font-medium text-sm">{user.name}</span>
-                      {user.isVerified && (
-                        <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <span>{user.username}</span>
-                      <span>•</span>
-                      <span>{user.followers} followers</span>
-                    </div>
-                  </div>
-                </div>
-                <Button
-                  size="sm"
-                  className="bg-blue-600 hover:bg-blue-700 text-white h-7 px-3 text-xs"
-                >
-                  Follow
-                </Button>
-              </motion.div>
-            ))}
-            
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              className="w-full mt-3 p-2 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
-            >
-              See more suggestions
-            </motion.button>
-          </CardContent>
-        </Card>
+                <Icon size={12} className="mr-1.5" />
+                {tab.label}
+              </Button>
+            );
+          })}
+        </div>
 
-        {/* Upcoming Events */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-white text-lg">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <Calendar size={16} className="text-white" />
-              </div>
-              Upcoming Events
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {upcomingEvents.map((event, index) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-200 cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-white font-medium text-sm">{event.title}</h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-slate-400">{event.date}</span>
-                      <span className="text-xs bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded">
-                        {event.type}
-                      </span>
-                    </div>
-                  </div>
-                  <Star size={14} className="text-slate-400 hover:text-yellow-400 transition-colors" />
-                </div>
-              </motion.div>
-            ))}
-          </CardContent>
-        </Card>
+        {/* Tab Content */}
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-6"
+        >
+          {activeTab === 'activity' && (
+            <>
+              <ActivityWidget />
+              <UserSuggestions />
+              <TrendingTopics />
+            </>
+          )}
 
-        {/* Quick Stats */}
-        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-700/30 border-slate-700">
-          <CardContent className="p-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">142</div>
-                <div className="text-xs text-slate-400">Posts Created</div>
+          {activeTab === 'profile' && (
+            <>
+              <ProfileCard
+                user={mockUser}
+                onFollow={(userId) => console.log('Follow user:', userId)}
+                onMessage={(userId) => console.log('Message user:', userId)}
+              />
+              
+              {/* Upcoming Events */}
+              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                <h3 className="text-white font-semibold text-lg mb-4 flex items-center gap-2">
+                  <Calendar size={18} />
+                  Upcoming Events
+                </h3>
+                <div className="space-y-3">
+                  {upcomingEvents.map((event) => (
+                    <motion.div
+                      key={event.id}
+                      whileHover={{ scale: 1.02 }}
+                      className="bg-slate-700/30 rounded-lg p-3 cursor-pointer hover:bg-slate-700/50 transition-colors"
+                    >
+                      <h4 className="text-white font-medium text-sm">{event.title}</h4>
+                      <p className="text-slate-400 text-xs mt-1">
+                        {event.date} at {event.time}
+                      </p>
+                      <p className="text-slate-500 text-xs">{event.location}</p>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">1.2k</div>
-                <div className="text-xs text-slate-400">Total Likes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">28</div>
-                <div className="text-xs text-slate-400">Bookmarks</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">89</div>
-                <div className="text-xs text-slate-400">Following</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </>
+          )}
+
+          {activeTab === 'notifications' && (
+            <NotificationSystem
+              notifications={mockNotifications}
+              onMarkAsRead={(id) => console.log('Mark as read:', id)}
+              onMarkAllAsRead={() => console.log('Mark all as read')}
+              onDismiss={(id) => console.log('Dismiss:', id)}
+              onClearAll={() => console.log('Clear all notifications')}
+            />
+          )}
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

@@ -18,6 +18,7 @@ import BackToTopButton from './BackToTopButton';
 import PullToRefresh from './PullToRefresh';
 import ReportModal from './ReportModal';
 import PrivacyControls from './PrivacyControls';
+import StoriesCarousel from './StoriesCarousel';
 
 const EnhancedMainFeed: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
@@ -52,6 +53,46 @@ const EnhancedMainFeed: React.FC = () => {
     handleToggleCollapse,
     handlePollVote
   } = usePosts(getInitialPosts());
+
+  // Mock stories data
+  const storyUsers = [
+    {
+      id: '1',
+      name: 'Sarah Kim',
+      username: '@sarahkim',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5b4?w=50&h=50&fit=crop',
+      hasStory: true,
+      isViewed: false,
+      storyCount: 3
+    },
+    {
+      id: '2',
+      name: 'David Rodriguez',
+      username: '@davidr',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop',
+      hasStory: true,
+      isViewed: true,
+      storyCount: 1
+    },
+    {
+      id: '3',
+      name: 'Emily Chen',
+      username: '@emilyc',
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop',
+      hasStory: true,
+      isViewed: false,
+      storyCount: 2
+    },
+    {
+      id: '4',
+      name: 'Mike Johnson',
+      username: '@mikej',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop',
+      hasStory: true,
+      isViewed: true,
+      storyCount: 1
+    }
+  ];
 
   const loadMorePosts = async () => {
     setIsLoading(true);
@@ -109,6 +150,13 @@ const EnhancedMainFeed: React.FC = () => {
 
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="max-w-2xl mx-auto p-4">
+          {/* Stories Carousel */}
+          <StoriesCarousel
+            users={storyUsers}
+            onCreateStory={() => handleCreatePost('image')}
+            onViewStory={(userId) => console.log('View story for user:', userId)}
+          />
+
           <PostFilters 
             activeFilter={activeFilter} 
             onFilterChange={setActiveFilter} 
