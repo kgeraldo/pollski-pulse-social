@@ -1,151 +1,266 @@
 
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Edit3, Calendar, MapPin, Link as LinkIcon, Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Settings, Share2, MoreHorizontal, Edit3, Camera } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import UserProfile from '@/components/UserProfile';
+import EnhancedPostCard from '@/components/EnhancedPostCard';
 
 const Profile = () => {
-  const userStats = [
-    { label: 'Posts', value: '127' },
-    { label: 'Followers', value: '2.4K' },
-    { label: 'Following', value: '892' },
-    { label: 'Likes', value: '15.6K' }
-  ];
+  const [activeTab, setActiveTab] = useState('posts');
+  const [isEditing, setIsEditing] = useState(false);
 
-  const recentPosts = [
+  // Mock user data
+  const user = {
+    id: '1',
+    name: 'Alex Johnson',
+    username: 'alexjohnson',
+    bio: 'Full-stack developer passionate about creating amazing user experiences. Love working with React, TypeScript, and modern web technologies.',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop',
+    banner: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=200&fit=crop',
+    location: 'San Francisco, CA',
+    website: 'alexjohnson.dev',
+    joinDate: 'March 2023',
+    followers: 2400,
+    following: 892,
+    posts: 127,
+    likes: 15600,
+    isVerified: true,
+    isPro: true,
+    badges: ['Early Adopter', 'Top Contributor', 'Verified Developer']
+  };
+
+  // Mock posts data
+  const userPosts = [
     {
       id: 1,
-      content: 'Just finished an amazing project using React and TypeScript! The developer experience is incredible.',
-      timestamp: '2 hours ago',
-      likes: 45,
-      comments: 12
-    },
-    {
-      id: 2,
-      content: 'What are your thoughts on the latest design trends? I\'m particularly interested in minimalism.',
-      timestamp: '1 day ago',
-      likes: 89,
-      comments: 23
-    },
-    {
-      id: 3,
-      content: 'Sharing some insights from my startup journey. It\'s been challenging but incredibly rewarding!',
-      timestamp: '3 days ago',
-      likes: 156,
-      comments: 34
+      author: 'Alex Johnson',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop',
+      timeAgo: '2h ago',
+      content: 'Just shipped a new feature! The React 19 compiler is incredible for performance optimization.',
+      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop',
+      votes: { up: 124, down: 8 },
+      comments: 23,
+      shares: 5,
+      category: 'Technology',
+      tags: ['react', 'performance', 'webdev'],
+      isVoted: null,
+      isBookmarked: false,
+      showComments: false,
+      engagementData: {
+        views: 3420,
+        likes: 124,
+        comments: 23,
+        shares: 5,
+        reach: 2100,
+        engagement_rate: 12,
+        peak_hour: '2:00 PM'
+      }
     }
   ];
+
+  const handleVote = (postId: number, voteType: 'up' | 'down') => {
+    console.log('Vote:', postId, voteType);
+  };
+
+  const handleBookmark = (postId: number) => {
+    console.log('Bookmark:', postId);
+  };
+
+  const handleToggleComments = (postId: number) => {
+    console.log('Toggle comments:', postId);
+  };
+
+  const handleCommentSubmit = (postId: number, content: string, parentId?: string) => {
+    console.log('Comment submit:', postId, content, parentId);
+  };
+
+  const handleCommentVote = (postId: number, commentId: string, voteType: 'up' | 'down') => {
+    console.log('Comment vote:', postId, commentId, voteType);
+  };
+
+  const handleToggleCollapse = (postId: number, commentId: string) => {
+    console.log('Toggle collapse:', postId, commentId);
+  };
 
   return (
     <div className="min-h-screen bg-background flex w-full">
       <Sidebar />
+      
       <div className="flex-1 bg-background">
-        <div className="sticky top-0 bg-background/95 backdrop-blur-md border-b border-border p-6 z-10">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h1 className="text-3xl font-bold text-foreground mb-2">Profile</h1>
-            <p className="text-muted-foreground">Manage your account and view your activity</p>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl mx-auto"
+        >
+          {/* Enhanced Profile Header */}
+          <div className="relative">
+            {/* Banner with edit overlay */}
+            <div className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-600 rounded-b-xl overflow-hidden group">
+              <img
+                src={user.banner}
+                alt="Profile banner"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/20" />
+              <Button
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                size="sm"
+              >
+                <Camera size={16} className="mr-2" />
+                Edit Banner
+              </Button>
+            </div>
 
-        <div className="p-6 max-w-4xl mx-auto">
-          {/* Profile Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-card p-8 rounded-xl border border-border mb-8"
-          >
-            <div className="flex items-start gap-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-primary-foreground font-bold text-3xl">AJ</span>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-2xl font-bold text-card-foreground">Alex Johnson</h2>
-                    <p className="text-muted-foreground">@alexjohnson</p>
-                  </div>
-                  <Button variant="outline" className="gap-2">
-                    <Edit3 size={16} />
-                    Edit Profile
+            {/* Profile info section */}
+            <div className="relative px-6 pb-6 bg-card rounded-b-xl border border-border">
+              <div className="flex items-end justify-between -mt-16 mb-4">
+                <div className="relative group">
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-32 h-32 rounded-full border-4 border-background object-cover"
+                  />
+                  <Button
+                    className="absolute inset-0 bg-black/50 hover:bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity rounded-full"
+                    size="sm"
+                  >
+                    <Camera size={20} />
                   </Button>
                 </div>
-                
-                <p className="text-card-foreground mb-4 leading-relaxed">
-                  Full-stack developer passionate about creating amazing user experiences. 
-                  Love working with React, TypeScript, and modern web technologies.
-                </p>
-                
-                <div className="flex items-center gap-6 text-muted-foreground text-sm">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={16} />
-                    <span>Joined March 2023</span>
+
+                <div className="flex items-center gap-3 mt-16">
+                  <Button variant="outline" size="sm">
+                    <Share2 size={16} className="mr-2" />
+                    Share
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Edit3 size={16} className="mr-2" />
+                    Edit Profile
+                  </Button>
+                  <Button variant="outline" size="icon">
+                    <MoreHorizontal size={16} />
+                  </Button>
+                </div>
+              </div>
+
+              {/* User details */}
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-foreground">{user.name}</h1>
+                  {user.isPro && (
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                      PRO
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-muted-foreground mb-1">@{user.username}</p>
+                <p className="text-foreground mb-4 text-lg">{user.bio}</p>
+
+                {/* Enhanced badges */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {user.badges.map((badge) => (
+                    <Badge key={badge} variant="secondary" className="text-sm">
+                      {badge}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Enhanced stats */}
+                <div className="grid grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">{user.posts}</div>
+                    <div className="text-sm text-muted-foreground">Posts</div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <MapPin size={16} />
-                    <span>San Francisco, CA</span>
+                  <div className="text-center cursor-pointer hover:bg-accent rounded-lg p-2 transition-colors">
+                    <div className="text-2xl font-bold text-foreground">{user.followers.toLocaleString()}</div>
+                    <div className="text-sm text-muted-foreground">Followers</div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <LinkIcon size={16} />
-                    <span>alexjohnson.dev</span>
+                  <div className="text-center cursor-pointer hover:bg-accent rounded-lg p-2 transition-colors">
+                    <div className="text-2xl font-bold text-foreground">{user.following.toLocaleString()}</div>
+                    <div className="text-sm text-muted-foreground">Following</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">{user.likes.toLocaleString()}</div>
+                    <div className="text-sm text-muted-foreground">Likes</div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-border">
-              {userStats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
-                  className="text-center"
-                >
-                  <p className="text-2xl font-bold text-card-foreground">{stat.value}</p>
-                  <p className="text-muted-foreground text-sm">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+              {/* Enhanced tabs */}
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="grid w-full grid-cols-5 mb-6">
+                  <TabsTrigger value="posts">Posts</TabsTrigger>
+                  <TabsTrigger value="replies">Replies</TabsTrigger>
+                  <TabsTrigger value="media">Media</TabsTrigger>
+                  <TabsTrigger value="likes">Likes</TabsTrigger>
+                  <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                </TabsList>
 
-          {/* Recent Activity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <h3 className="text-xl font-semibold text-foreground mb-6">Recent Posts</h3>
-            <div className="space-y-6">
-              {recentPosts.map((post, index) => (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                  className="bg-card p-6 rounded-xl border border-border"
-                >
-                  <p className="text-card-foreground mb-4 leading-relaxed">{post.content}</p>
-                  <div className="flex items-center justify-between text-muted-foreground text-sm">
-                    <span>{post.timestamp}</span>
-                    <div className="flex items-center gap-4">
-                      <span>{post.likes} likes</span>
-                      <span>{post.comments} comments</span>
+                <TabsContent value="posts" className="space-y-6">
+                  {userPosts.map((post, index) => (
+                    <EnhancedPostCard
+                      key={post.id}
+                      post={post}
+                      index={index}
+                      onVote={handleVote}
+                      onBookmark={handleBookmark}
+                      onToggleComments={handleToggleComments}
+                      onCommentSubmit={handleCommentSubmit}
+                      onCommentVote={handleCommentVote}
+                      onToggleCollapse={handleToggleCollapse}
+                    />
+                  ))}
+                </TabsContent>
+
+                <TabsContent value="replies">
+                  <div className="text-center py-12 text-muted-foreground">
+                    <div className="text-lg font-medium mb-2">No replies yet</div>
+                    <p>Your replies to other posts will appear here</p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="media">
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* Media grid placeholder */}
+                    <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
+                      <span className="text-muted-foreground">Media</span>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                </TabsContent>
+
+                <TabsContent value="likes">
+                  <div className="text-center py-12 text-muted-foreground">
+                    <div className="text-lg font-medium mb-2">No liked posts</div>
+                    <p>Posts you like will appear here</p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="analytics">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="bg-card border border-border rounded-lg p-6">
+                      <h3 className="text-lg font-semibold mb-4">Profile Views</h3>
+                      <div className="text-3xl font-bold text-blue-500">1,234</div>
+                      <p className="text-sm text-muted-foreground">This month</p>
+                    </div>
+                    <div className="bg-card border border-border rounded-lg p-6">
+                      <h3 className="text-lg font-semibold mb-4">Engagement Rate</h3>
+                      <div className="text-3xl font-bold text-green-500">8.2%</div>
+                      <p className="text-sm text-muted-foreground">Average</p>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
+
       <RightSidebar />
       <FloatingActionButton />
     </div>
