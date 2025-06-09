@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import ActivityWidget from './ActivityWidget';
 import UserSuggestions from './UserSuggestions';
 import TrendingTopics from './TrendingTopics';
+import TrendingHashtags from './TrendingHashtags';
 import ProfileCard from './ProfileCard';
 import NotificationSystem from './NotificationSystem';
+import NotificationBell from './NotificationBell';
 import { Calendar, Settings, Users, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -103,6 +105,12 @@ const EnhancedRightSidebar: React.FC = () => {
         transition={{ duration: 0.4 }}
         className="space-y-6"
       >
+        {/* Header with Notification Bell */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-white font-bold text-lg">Dashboard</h2>
+          <NotificationBell />
+        </div>
+
         {/* Tab Navigation */}
         <div className="flex bg-slate-800/50 rounded-lg p-1 border border-slate-700">
           {tabs.map((tab) => {
@@ -135,6 +143,7 @@ const EnhancedRightSidebar: React.FC = () => {
           {activeTab === 'activity' && (
             <>
               <ActivityWidget />
+              <TrendingHashtags />
               <UserSuggestions />
               <TrendingTopics />
             </>

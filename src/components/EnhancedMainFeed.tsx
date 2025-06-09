@@ -19,6 +19,9 @@ import PullToRefresh from './PullToRefresh';
 import ReportModal from './ReportModal';
 import PrivacyControls from './PrivacyControls';
 import StoriesCarousel from './StoriesCarousel';
+import QuickPostComposer from './QuickPostComposer';
+import LiveChat from './LiveChat';
+import BookmarkManager from './BookmarkManager';
 
 const EnhancedMainFeed: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
@@ -31,6 +34,9 @@ const EnhancedMainFeed: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showPrivacyControls, setShowPrivacyControls] = useState(false);
+  const [showLiveChat, setShowLiveChat] = useState(false);
+  const [showBookmarkManager, setShowBookmarkManager] = useState(false);
+  const [isChatMinimized, setIsChatMinimized] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [advancedFilters, setAdvancedFilters] = useState<FilterOptions>({
     category: 'All',
@@ -119,6 +125,11 @@ const EnhancedMainFeed: React.FC = () => {
     setShowCreatePost(true);
   };
 
+  const handleQuickPost = (content: string, options: any) => {
+    console.log('Quick post created:', { content, options });
+    // Add post creation logic here
+  };
+
   const handleReport = (reason: string, details: string) => {
     console.log('Report submitted:', { reason, details });
   };
@@ -140,6 +151,8 @@ const EnhancedMainFeed: React.FC = () => {
         onOpenAdvancedFilter={() => setShowAdvancedFilter(true)}
         onCreatePost={() => handleCreatePost('text')}
         onOpenAuth={() => { setAuthMode('login'); setShowAuth(true); }}
+        onOpenBookmarks={() => setShowBookmarkManager(true)}
+        onOpenChat={() => setShowLiveChat(true)}
       />
 
       {!isOnline && (
@@ -156,6 +169,9 @@ const EnhancedMainFeed: React.FC = () => {
             onCreateStory={() => handleCreatePost('image')}
             onViewStory={(userId) => console.log('View story for user:', userId)}
           />
+
+          {/* Quick Post Composer */}
+          <QuickPostComposer onSubmit={handleQuickPost} />
 
           <PostFilters 
             activeFilter={activeFilter} 
@@ -198,6 +214,13 @@ const EnhancedMainFeed: React.FC = () => {
 
       <BackToTopButton />
 
+      {/* Live Chat */}
+      <LiveChat
+        isOpen={showLiveChat && !isChatMinimized}
+        onClose={() => setShowLiveChat(false)}
+        onMinimize={() => setIsChatMinimized(true)}
+      />
+
       <AnimatePresence>
         {showAuth && (
           <AuthPages
@@ -233,6 +256,12 @@ const EnhancedMainFeed: React.FC = () => {
           <PrivacyControls
             isOpen={showPrivacyControls}
             onClose={() => setShowPrivacyControls(false)}
+          />
+        )}
+        {showBookmarkManager && (
+          <BookmarkManager
+            isOpen={showBookmarkManager}
+            onClose={() => setShowBookmarkManager(false)}
           />
         )}
       </AnimatePresence>
