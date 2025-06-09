@@ -6,6 +6,8 @@ import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import CommunityGroups from '@/components/CommunityGroups';
+import CommunityActivity from '@/components/community/CommunityActivity';
+import CommunityDiscovery from '@/components/community/CommunityDiscovery';
 import { Button } from '@/components/ui/button';
 
 const Community = () => {
@@ -17,7 +19,7 @@ const Community = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto p-6"
+          className="max-w-6xl mx-auto p-6"
         >
           {/* Header */}
           <div className="mb-8">
@@ -58,7 +60,16 @@ const Community = () => {
             </div>
           </div>
 
-          <CommunityGroups />
+          {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <CommunityGroups />
+            </div>
+            <div className="space-y-6">
+              <CommunityActivity />
+              <CommunityDiscovery />
+            </div>
+          </div>
         </motion.div>
       </div>
 

@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import PollCard from '@/components/PollCard';
 import PollStats from '@/components/poll/PollStats';
+import PollCategories from '@/components/poll/PollCategories';
+import PollInsights from '@/components/poll/PollInsights';
 import CreatePollButton from '@/components/poll/CreatePollButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,6 +42,7 @@ interface FilterOption {
 
 const Polls: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [polls, setPolls] = useState<Poll[]>([
     {
@@ -124,11 +126,13 @@ const Polls: React.FC = () => {
                          poll.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          poll.author.toLowerCase().includes(searchQuery.toLowerCase());
     
+    const matchesCategory = selectedCategory === 'all' || poll.category.toLowerCase() === selectedCategory;
+    
     if (activeFilter === 'participated') {
-      return matchesSearch && poll.hasVoted;
+      return matchesSearch && matchesCategory && poll.hasVoted;
     }
     
-    return matchesSearch;
+    return matchesSearch && matchesCategory;
   });
 
   const pollStats = {
@@ -157,6 +161,14 @@ const Polls: React.FC = () => {
 
             {/* Poll Stats */}
             <PollStats {...pollStats} />
+
+            {/* Poll Categories */}
+            <div className="mb-4">
+              <PollCategories 
+                selectedCategory={selectedCategory}
+                onCategorySelect={setSelectedCategory}
+              />
+            </div>
 
             {/* Search and Filters */}
             <div className="space-y-4">
@@ -193,30 +205,38 @@ const Polls: React.FC = () => {
           </div>
         </div>
 
-        {/* Polls */}
-        <div className="max-w-2xl mx-auto p-6 space-y-6">
-          <AnimatePresence mode="wait">
-            {filteredPolls.map((poll, index) => (
-              <PollCard
-                key={poll.id}
-                poll={poll}
-                onVote={handleVote}
-                index={index}
-              />
-            ))}
-          </AnimatePresence>
-          
-          {filteredPolls.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-12"
-            >
-              <BarChart3 className="mx-auto text-slate-600 mb-4" size={48} />
-              <h3 className="text-xl font-semibold text-slate-400 mb-2">No polls found</h3>
-              <p className="text-slate-500">Try adjusting your search or check back later!</p>
-            </motion.div>
-          )}
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto p-6 flex gap-6">
+          {/* Polls */}
+          <div className="flex-1 space-y-6">
+            <AnimatePresence mode="wait">
+              {filteredPolls.map((poll, index) => (
+                <PollCard
+                  key={poll.id}
+                  poll={poll}
+                  onVote={handleVote}
+                  index={index}
+                />
+              ))}
+            </AnimatePresence>
+            
+            {filteredPolls.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-12"
+              >
+                <BarChart3 className="mx-auto text-slate-600 mb-4" size={48} />
+                <h3 className="text-xl font-semibold text-slate-400 mb-2">No polls found</h3>
+                <p className="text-slate-500">Try adjusting your search or check back later!</p>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Sidebar with Insights */}
+          <div className="w-80">
+            <PollInsights {...pollStats} />
+          </div>
         </div>
 
         <CreatePollButton onCreatePoll={handleCreatePoll} />

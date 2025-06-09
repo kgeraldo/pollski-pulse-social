@@ -6,6 +6,8 @@ import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import TrendingContent from '@/components/TrendingContent';
+import LiveTrendingIndicator from '@/components/trending/LiveTrendingIndicator';
+import TrendingMap from '@/components/trending/TrendingMap';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -17,7 +19,7 @@ const Trending = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto p-6"
+          className="max-w-6xl mx-auto p-6"
         >
           {/* Header */}
           <div className="mb-8">
@@ -43,6 +45,9 @@ const Trending = () => {
               </div>
             </div>
 
+            {/* Live Trending Indicator */}
+            <LiveTrendingIndicator />
+
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="bg-card border border-border rounded-lg p-4 text-center">
@@ -60,7 +65,15 @@ const Trending = () => {
             </div>
           </div>
 
-          <TrendingContent />
+          {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <TrendingContent />
+            </div>
+            <div className="space-y-6">
+              <TrendingMap />
+            </div>
+          </div>
         </motion.div>
       </div>
 

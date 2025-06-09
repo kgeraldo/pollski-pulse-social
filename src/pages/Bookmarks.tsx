@@ -1,13 +1,33 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Bookmark, Clock, Star } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import EnhancedBookmarkCollections from '@/components/EnhancedBookmarkCollections';
+import BookmarkSearch from '@/components/bookmarks/BookmarkSearch';
 
 const Bookmarks = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('recent');
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    console.log('Searching for:', query);
+  };
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    console.log('Filter changed to:', filter);
+  };
+
+  const handleSortChange = (sort: string) => {
+    setSortBy(sort);
+    console.log('Sort changed to:', sort);
+  };
+
   return (
     <div className="min-h-screen bg-background flex w-full">
       <Sidebar />
@@ -54,6 +74,13 @@ const Bookmarks = () => {
                 </div>
               </div>
             </div>
+
+            {/* Search and Filters */}
+            <BookmarkSearch
+              onSearch={handleSearch}
+              onFilterChange={handleFilterChange}
+              onSortChange={handleSortChange}
+            />
           </div>
 
           <EnhancedBookmarkCollections />
