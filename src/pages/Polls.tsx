@@ -4,6 +4,8 @@ import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
 import PollCard from '@/components/PollCard';
+import PollStats from '@/components/poll/PollStats';
+import CreatePollButton from '@/components/poll/CreatePollButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -113,6 +115,10 @@ const Polls: React.FC = () => {
     );
   };
 
+  const handleCreatePoll = (newPoll: Poll) => {
+    setPolls(prev => [newPoll, ...prev]);
+  };
+
   const filteredPolls = polls.filter(poll => {
     const matchesSearch = poll.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          poll.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -124,6 +130,13 @@ const Polls: React.FC = () => {
     
     return matchesSearch;
   });
+
+  const pollStats = {
+    totalPolls: polls.length,
+    totalVotes: polls.reduce((sum, poll) => sum + poll.totalVotes, 0),
+    activeToday: polls.filter(poll => poll.timeAgo.includes('h ago') || poll.timeAgo.includes('min ago')).length,
+    participationRate: Math.round((polls.filter(poll => poll.hasVoted).length / polls.length) * 100) || 0
+  };
 
   return (
     <div className="min-h-screen bg-slate-800 flex w-full">
@@ -142,8 +155,11 @@ const Polls: React.FC = () => {
               <p className="text-slate-400 text-sm font-medium">Vote and see what the community thinks</p>
             </motion.div>
 
+            {/* Poll Stats */}
+            <PollStats {...pollStats} />
+
             {/* Search and Filters */}
-            <div className="mt-6 space-y-4">
+            <div className="space-y-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
                 <Input
@@ -202,6 +218,8 @@ const Polls: React.FC = () => {
             </motion.div>
           )}
         </div>
+
+        <CreatePollButton onCreatePoll={handleCreatePoll} />
       </div>
 
       <RightSidebar />

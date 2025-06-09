@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Hash, Users, Eye, Clock, Fire, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, Hash, Users, Eye, Clock, Flame, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -180,7 +179,7 @@ const TrendingContent: React.FC = () => {
                         <ArrowUp size={14} />
                         {topic.growth}%
                       </div>
-                      <Fire size={16} className="text-orange-500" />
+                      <Flame size={16} className="text-orange-500" />
                     </div>
                   </div>
                 </CardContent>
