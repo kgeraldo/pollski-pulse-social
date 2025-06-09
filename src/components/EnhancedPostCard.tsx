@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tag } from 'lucide-react';
+import { Tag, BarChart3 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import CommentSystem from './CommentSystem';
 import EnhancedPoll from './EnhancedPoll';
 import PostHeader from './post/PostHeader';
 import PostActions from './post/PostActions';
+import PostEngagementInsights from './PostEngagementInsights';
 import { useMentions } from '@/hooks/useMentions';
 import { ReactionType } from './EnhancedReactions';
 
@@ -54,6 +56,15 @@ interface Post {
     users: string[];
     hasReacted: boolean;
   }>;
+  engagementData?: {
+    views: number;
+    likes: number;
+    comments: number;
+    shares: number;
+    reach: number;
+    engagement_rate: number;
+    peak_hour: string;
+  };
 }
 
 interface EnhancedPostCardProps {
@@ -82,6 +93,18 @@ const EnhancedPostCard: React.FC<EnhancedPostCardProps> = ({
   index = 0
 }) => {
   const { formatTextWithMentions } = useMentions();
+  const [showInsights, setShowInsights] = useState(false);
+
+  // Mock engagement data if not provided
+  const engagementData = post.engagementData || {
+    views: Math.floor(Math.random() * 10000) + 1000,
+    likes: post.votes.up,
+    comments: post.comments,
+    shares: post.shares,
+    reach: Math.floor(Math.random() * 5000) + 500,
+    engagement_rate: Math.floor(Math.random() * 15) + 5,
+    peak_hour: '2:00 PM'
+  };
 
   return (
     <motion.div
@@ -106,17 +129,35 @@ const EnhancedPostCard: React.FC<EnhancedPostCardProps> = ({
             {formatTextWithMentions(post.content)}
           </div>
 
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-700 text-slate-300 text-xs rounded-md font-medium cursor-pointer hover:bg-slate-600 transition-colors"
-              >
-                <Tag size={10} />
-                #{tag}
-              </span>
-            ))}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-wrap gap-1.5">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-700 text-slate-300 text-xs rounded-md font-medium cursor-pointer hover:bg-slate-600 transition-colors"
+                >
+                  <Tag size={10} />
+                  #{tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Insights Toggle */}
+            <Button
+              onClick={() => setShowInsights(!showInsights)}
+              className="bg-transparent hover:bg-slate-700/50 text-slate-400 hover:text-blue-400 h-auto p-1 text-xs"
+              title="View engagement insights"
+            >
+              <BarChart3 size={14} className="mr-1" />
+              Insights
+            </Button>
           </div>
+
+          {/* Engagement Insights */}
+          <PostEngagementInsights
+            data={engagementData}
+            isExpanded={showInsights}
+          />
 
           {post.image && (
             <motion.img
