@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Filter, Clock } from 'lucide-react';
+import { TrendingUp, Filter, Clock, Zap } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import RightSidebar from '@/components/RightSidebar';
 import FloatingActionButton from '@/components/FloatingActionButton';
@@ -17,6 +17,10 @@ import TrendingHashtags from '@/components/trending/TrendingHashtags';
 import TrendingInfluencers from '@/components/trending/TrendingInfluencers';
 import TrendingNews from '@/components/trending/TrendingNews';
 import TrendingStats from '@/components/trending/TrendingStats';
+import TrendingComparison from '@/components/trending/TrendingComparison';
+import TrendingNotifications from '@/components/trending/TrendingNotifications';
+import TrendingBookmarks from '@/components/trending/TrendingBookmarks';
+import TrendingShare from '@/components/trending/TrendingShare';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -38,8 +42,8 @@ const Trending = () => {
                   <TrendingUp size={20} className="text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-foreground">Trending</h1>
-                  <p className="text-muted-foreground">What's happening right now</p>
+                  <h1 className="text-3xl font-bold text-foreground">Trending Dashboard</h1>
+                  <p className="text-muted-foreground">Real-time insights and analytics</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -51,6 +55,10 @@ const Trending = () => {
                   <Clock size={16} className="mr-2" />
                   Real-time
                 </Button>
+                <Button size="sm" className="bg-gradient-to-r from-orange-500 to-red-500">
+                  <Zap size={16} className="mr-2" />
+                  Live Mode
+                </Button>
               </div>
             </div>
 
@@ -61,11 +69,13 @@ const Trending = () => {
             <TrendingStats />
           </div>
 
-          {/* Main Content Grid */}
+          {/* Enhanced Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column - Main Content */}
+            {/* Left Column - Core Trending Content */}
             <div className="lg:col-span-4 space-y-6">
               <TrendingContent />
+              <TrendingComparison />
+              <TrendingNotifications />
             </div>
             
             {/* Middle Column - Analytics & Interactive Features */}
@@ -80,6 +90,8 @@ const Trending = () => {
             <div className="lg:col-span-3 space-y-6">
               <TrendingHashtags />
               <TrendingInfluencers />
+              <TrendingBookmarks />
+              <TrendingShare />
               <TrendingAnalytics />
               <TrendingSentiment />
               <TrendingPredictions />
