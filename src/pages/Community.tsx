@@ -8,6 +8,7 @@ import FloatingActionButton from '@/components/FloatingActionButton';
 import CommunityGroups from '@/components/CommunityGroups';
 import CommunityActivity from '@/components/community/CommunityActivity';
 import CommunityDiscovery from '@/components/community/CommunityDiscovery';
+import CommunityInsights from '@/components/community/CommunityInsights';
 import { Button } from '@/components/ui/button';
 
 const Community = () => {
@@ -39,35 +40,42 @@ const Community = () => {
               </Button>
             </div>
 
-            {/* Community Stats */}
+            {/* Enhanced Community Stats */}
             <div className="grid grid-cols-4 gap-4 mb-6">
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">147</div>
                 <div className="text-sm text-muted-foreground">Communities</div>
+                <div className="text-xs text-green-500 mt-1">+8 this week</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">12.4K</div>
-                <div className="text-sm text-muted-foreground">Members</div>
+                <div className="text-sm text-muted-foreground">Total Members</div>
+                <div className="text-xs text-blue-500 mt-1">+234 new</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">89</div>
-                <div className="text-sm text-muted-foreground">Events</div>
+                <div className="text-sm text-muted-foreground">Active Events</div>
+                <div className="text-xs text-purple-500 mt-1">This month</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">23%</div>
-                <div className="text-sm text-muted-foreground">Growth</div>
+                <div className="text-sm text-muted-foreground">Growth Rate</div>
+                <div className="text-xs text-green-500 mt-1">Monthly</div>
               </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <CommunityGroups />
             </div>
             <div className="space-y-6">
               <CommunityActivity />
               <CommunityDiscovery />
+            </div>
+            <div>
+              <CommunityInsights />
             </div>
           </div>
         </motion.div>

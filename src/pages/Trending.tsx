@@ -8,6 +8,7 @@ import FloatingActionButton from '@/components/FloatingActionButton';
 import TrendingContent from '@/components/TrendingContent';
 import LiveTrendingIndicator from '@/components/trending/LiveTrendingIndicator';
 import TrendingMap from '@/components/trending/TrendingMap';
+import TrendingAnalytics from '@/components/trending/TrendingAnalytics';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -48,30 +49,41 @@ const Trending = () => {
             {/* Live Trending Indicator */}
             <LiveTrendingIndicator />
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            {/* Enhanced Stats */}
+            <div className="grid grid-cols-4 gap-4 mb-6">
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">2,847</div>
                 <div className="text-sm text-muted-foreground">Trending Topics</div>
+                <div className="text-xs text-green-500 mt-1">+12% today</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">156K</div>
                 <div className="text-sm text-muted-foreground">Active Discussions</div>
+                <div className="text-xs text-blue-500 mt-1">Live updates</div>
               </div>
               <div className="bg-card border border-border rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-foreground mb-1">89%</div>
                 <div className="text-sm text-muted-foreground">Engagement Rate</div>
+                <div className="text-xs text-green-500 mt-1">+5% vs yesterday</div>
+              </div>
+              <div className="bg-card border border-border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-foreground mb-1">127</div>
+                <div className="text-sm text-muted-foreground">Countries Active</div>
+                <div className="text-xs text-purple-500 mt-1">Global reach</div>
               </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-2">
               <TrendingContent />
             </div>
             <div className="space-y-6">
               <TrendingMap />
+            </div>
+            <div>
+              <TrendingAnalytics />
             </div>
           </div>
         </motion.div>
