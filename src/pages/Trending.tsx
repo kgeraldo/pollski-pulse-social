@@ -21,6 +21,8 @@ import TrendingComparison from '@/components/trending/TrendingComparison';
 import TrendingNotifications from '@/components/trending/TrendingNotifications';
 import TrendingBookmarks from '@/components/trending/TrendingBookmarks';
 import TrendingShare from '@/components/trending/TrendingShare';
+import TrendingAlerts from '@/components/trending/TrendingAlerts';
+import TrendingInsights from '@/components/trending/TrendingInsights';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -75,6 +77,7 @@ const Trending = () => {
             <div className="lg:col-span-4 space-y-6">
               <TrendingContent />
               <TrendingComparison />
+              <TrendingAlerts />
               <TrendingNotifications />
             </div>
             
@@ -82,6 +85,7 @@ const Trending = () => {
             <div className="lg:col-span-5 space-y-6">
               <TrendingFilters />
               <TrendingDashboard />
+              <TrendingInsights />
               <TrendingNews />
               <TrendingMap />
             </div>

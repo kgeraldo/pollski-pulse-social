@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart, TrendingUp, TrendingDown, ArrowRight, Compare } from 'lucide-react';
+import { BarChart, TrendingUp, TrendingDown, ArrowRight, GitCompare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -40,7 +39,7 @@ const TrendingComparison: React.FC = () => {
     <Card className="bg-card border-border">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <Compare className="text-orange-500" size={18} />
+          <GitCompare className="text-orange-500" size={18} />
           Trend Comparison
         </CardTitle>
       </CardHeader>
