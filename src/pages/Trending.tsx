@@ -13,6 +13,10 @@ import TrendingFilters from '@/components/trending/TrendingFilters';
 import TrendingSentiment from '@/components/trending/TrendingSentiment';
 import TrendingPredictions from '@/components/trending/TrendingPredictions';
 import TrendingDashboard from '@/components/trending/TrendingDashboard';
+import TrendingHashtags from '@/components/trending/TrendingHashtags';
+import TrendingInfluencers from '@/components/trending/TrendingInfluencers';
+import TrendingNews from '@/components/trending/TrendingNews';
+import TrendingStats from '@/components/trending/TrendingStats';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -53,47 +57,29 @@ const Trending = () => {
             {/* Live Trending Indicator */}
             <LiveTrendingIndicator />
 
-            {/* Enhanced Stats */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
-              <div className="bg-card border border-border rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-foreground mb-1">2,847</div>
-                <div className="text-sm text-muted-foreground">Trending Topics</div>
-                <div className="text-xs text-green-500 mt-1">+12% today</div>
-              </div>
-              <div className="bg-card border border-border rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-foreground mb-1">156K</div>
-                <div className="text-sm text-muted-foreground">Active Discussions</div>
-                <div className="text-xs text-blue-500 mt-1">Live updates</div>
-              </div>
-              <div className="bg-card border border-border rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-foreground mb-1">89%</div>
-                <div className="text-sm text-muted-foreground">Engagement Rate</div>
-                <div className="text-xs text-green-500 mt-1">+5% vs yesterday</div>
-              </div>
-              <div className="bg-card border border-border rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-foreground mb-1">127</div>
-                <div className="text-sm text-muted-foreground">Countries Active</div>
-                <div className="text-xs text-purple-500 mt-1">Global reach</div>
-              </div>
-            </div>
+            {/* Enhanced Real-time Stats */}
+            <TrendingStats />
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left Column - Main Content */}
-            <div className="lg:col-span-3 space-y-6">
+            <div className="lg:col-span-4 space-y-6">
               <TrendingContent />
             </div>
             
-            {/* Middle Column - Analytics & Filters */}
-            <div className="lg:col-span-2 space-y-6">
+            {/* Middle Column - Analytics & Interactive Features */}
+            <div className="lg:col-span-5 space-y-6">
               <TrendingFilters />
               <TrendingDashboard />
+              <TrendingNews />
               <TrendingMap />
             </div>
             
-            {/* Right Column - Insights & Predictions */}
-            <div className="lg:col-span-1 space-y-6">
+            {/* Right Column - Insights & Social Features */}
+            <div className="lg:col-span-3 space-y-6">
+              <TrendingHashtags />
+              <TrendingInfluencers />
               <TrendingAnalytics />
               <TrendingSentiment />
               <TrendingPredictions />
