@@ -9,6 +9,10 @@ import TrendingContent from '@/components/TrendingContent';
 import LiveTrendingIndicator from '@/components/trending/LiveTrendingIndicator';
 import TrendingMap from '@/components/trending/TrendingMap';
 import TrendingAnalytics from '@/components/trending/TrendingAnalytics';
+import TrendingFilters from '@/components/trending/TrendingFilters';
+import TrendingSentiment from '@/components/trending/TrendingSentiment';
+import TrendingPredictions from '@/components/trending/TrendingPredictions';
+import TrendingDashboard from '@/components/trending/TrendingDashboard';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -20,7 +24,7 @@ const Trending = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-6xl mx-auto p-6"
+          className="max-w-7xl mx-auto p-6"
         >
           {/* Header */}
           <div className="mb-8">
@@ -74,16 +78,25 @@ const Trending = () => {
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-2">
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-3 space-y-6">
               <TrendingContent />
             </div>
-            <div className="space-y-6">
+            
+            {/* Middle Column - Analytics & Filters */}
+            <div className="lg:col-span-2 space-y-6">
+              <TrendingFilters />
+              <TrendingDashboard />
               <TrendingMap />
             </div>
-            <div>
+            
+            {/* Right Column - Insights & Predictions */}
+            <div className="lg:col-span-1 space-y-6">
               <TrendingAnalytics />
+              <TrendingSentiment />
+              <TrendingPredictions />
             </div>
           </div>
         </motion.div>
