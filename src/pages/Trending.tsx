@@ -25,6 +25,10 @@ import TrendingAlerts from '@/components/trending/TrendingAlerts';
 import TrendingInsights from '@/components/trending/TrendingInsights';
 import TrendingEngagement from '@/components/trending/TrendingEngagement';
 import TrendingLeaderboard from '@/components/trending/TrendingLeaderboard';
+import TrendingRealTime from '@/components/trending/TrendingRealTime';
+import TrendingCategories from '@/components/trending/TrendingCategories';
+import TrendingSearchBar from '@/components/trending/TrendingSearchBar';
+import TrendingQuickActions from '@/components/trending/TrendingQuickActions';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -69,23 +73,30 @@ const Trending = () => {
             {/* Live Trending Indicator */}
             <LiveTrendingIndicator />
 
+            {/* Enhanced Search Bar */}
+            <div className="mb-6">
+              <TrendingSearchBar />
+            </div>
+
             {/* Enhanced Real-time Stats */}
             <TrendingStats />
           </div>
 
           {/* Enhanced Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column - Core Trending Content */}
+            {/* Left Column - Core Trending Content & Real-time */}
             <div className="lg:col-span-4 space-y-6">
+              <TrendingRealTime />
               <TrendingContent />
               <TrendingComparison />
               <TrendingAlerts />
               <TrendingEngagement />
-              <TrendingNotifications />
+              <TrendingQuickActions />
             </div>
             
             {/* Middle Column - Analytics & Interactive Features */}
             <div className="lg:col-span-5 space-y-6">
+              <TrendingCategories />
               <TrendingFilters />
               <TrendingDashboard />
               <TrendingInsights />
@@ -98,6 +109,7 @@ const Trending = () => {
               <TrendingLeaderboard />
               <TrendingHashtags />
               <TrendingInfluencers />
+              <TrendingNotifications />
               <TrendingBookmarks />
               <TrendingShare />
               <TrendingAnalytics />
