@@ -23,6 +23,8 @@ import TrendingBookmarks from '@/components/trending/TrendingBookmarks';
 import TrendingShare from '@/components/trending/TrendingShare';
 import TrendingAlerts from '@/components/trending/TrendingAlerts';
 import TrendingInsights from '@/components/trending/TrendingInsights';
+import TrendingEngagement from '@/components/trending/TrendingEngagement';
+import TrendingLeaderboard from '@/components/trending/TrendingLeaderboard';
 import { Button } from '@/components/ui/button';
 
 const Trending = () => {
@@ -78,6 +80,7 @@ const Trending = () => {
               <TrendingContent />
               <TrendingComparison />
               <TrendingAlerts />
+              <TrendingEngagement />
               <TrendingNotifications />
             </div>
             
@@ -92,6 +95,7 @@ const Trending = () => {
             
             {/* Right Column - Insights & Social Features */}
             <div className="lg:col-span-3 space-y-6">
+              <TrendingLeaderboard />
               <TrendingHashtags />
               <TrendingInfluencers />
               <TrendingBookmarks />

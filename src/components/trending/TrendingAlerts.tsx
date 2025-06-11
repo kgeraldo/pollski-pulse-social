@@ -144,7 +144,6 @@ const TrendingAlerts: React.FC = () => {
             <Switch 
               checked={alertSettings.spikes}
               onCheckedChange={(checked) => setAlertSettings(prev => ({ ...prev, spikes: checked }))}
-              size="sm"
             />
           </div>
           <div className="flex items-center justify-between">
@@ -152,7 +151,6 @@ const TrendingAlerts: React.FC = () => {
             <Switch 
               checked={alertSettings.viral}
               onCheckedChange={(checked) => setAlertSettings(prev => ({ ...prev, viral: checked }))}
-              size="sm"
             />
           </div>
         </div>
@@ -169,7 +167,7 @@ const TrendingAlerts: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ delay: index * 0.05 }}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                  className={`p-3 rounded-lg border cursor-pointer transition-all group ${
                     alert.read ? 'bg-accent/20' : getPriorityColor(alert.priority)
                   } ${!alert.read ? 'shadow-sm' : ''}`}
                   onClick={() => markAsRead(alert.id)}
